@@ -31,10 +31,30 @@
 
         <!-- Add your site or application content here -->
 
+        <div class="container body_div">
+
+
+
         <div class="container">
+            <h1><%= title %></h1>
+        </div>
 
 
-        <h1><%= title %></h1>
+
+
+
+        <div class="container">
+            <h1 class="lead"><%= list_title %></h1>
+        </div>
+
+
+
+
+
+
+
+
+
 
         <ul>
         	<% for (var i = 0; i < items.length; i++) { %>
@@ -45,15 +65,23 @@
 <!--         <form action="/add" method="post" accept-charset="utf-8">
         	<input type="text" name="newItem">
         	<input class="btn btn-default" type="submit">
+        </form> -->
+
+        <form action="/add" method="post">
+            <input type="text" name="newItem">
+            <input class="btn btn-default" type="submit" value="Submit">
         </form>
- -->
+
+
+
+
 
         </div>
 
 
 
 
-        <div class="container">
+<!--         <div class="container">
 
             <% if(!isAuthenticated) { %>
             <a class="btn btn-default" href="/login">Log In Here</a>
@@ -64,7 +92,7 @@
             <a class="btn btn-default" href="/logout">Log Out</a>
             <% } %>
 
-        </div>
+        </div> -->
 
 
 

@@ -9,7 +9,7 @@
 			"isPresent" : true,
 			"isStaff": true },
 
-		{ "id_num" : 1, "lastName": "Phung", "firstName" : "Eric", "isPresent" : true, "isStaff": true },
+		{ "id_num" : 1, "lastName": "Phung", "firstName" : "Eric", "isPresent" : false, "isStaff": true },
 		{ "id_num" : 2, "lastName": "Hunt", "firstName" : "Cheryl", "isPresent" : false, "isStaff": false }
 
 	]

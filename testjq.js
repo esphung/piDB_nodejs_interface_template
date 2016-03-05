@@ -2,7 +2,7 @@
 * @Author: home
 * @Date:   2016-03-05 00:20:18
 * @Last Modified by:   home
-* @Last Modified time: 2016-03-05 01:04:41
+* @Last Modified time: 2016-03-05 14:22:39
 */
 
 
@@ -23,10 +23,6 @@
     console.log($('.hello').text());
 
 
-
-
-
   });
 }());
-
 

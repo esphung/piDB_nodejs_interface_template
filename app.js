@@ -28,6 +28,7 @@ var test_jq = require('./testjq.js');
 
 
 
+
 // local vars
 const PORT = 8000;
 var app = express();
@@ -37,7 +38,7 @@ var contents = fs.readFileSync("people.json");
 var jsonContent = JSON.parse(contents);
 var person_object_list = createPersonDatabase();
 var new_person = new Person();
-
+var currentPersonObject = new Person();
 
 
 
@@ -183,6 +184,11 @@ function ensureAuthenticated (req,res,next) {
 
 
 
+// initializ current items list values to first names of Present People
+var currentItems = getAllPresentPersonObjects(person_object_list);// must be global to this page
+currentItems = getAllFullNamesFromObjectList(currentItems);
+
+
 
 
 
@@ -196,15 +202,6 @@ function ensureAuthenticated (req,res,next) {
 
 
 
-app.get('/api/data', ensureAuthenticated, function (req,res){
-	res.json([
-	{ value : "foo" },
-	{ value : "bar" },
-	{ value : "baz" }
-	])
-} )
-
-
 
 
 
@@ -213,17 +210,21 @@ app.get('/api/data', ensureAuthenticated, function (req,res){
 
 
 app.get('/', function (req,res) {
+	currentItems = getAllPresentPersonObjects(person_object_list);// must be global to this page
+	currentItems = getAllFullNamesFromObjectList(currentItems);
+
 
 	// use this to see who gets selected
-	var currentItems = [];
 	// load data from db to view here
 	res.render('index',{
 		isAuthenticated: req.isAuthenticated(),
 		user: req.user,
+		list_title: "Currently Present",
 		title: jsonContent.databaseName,
 		items: currentItems
 	});
 	console.log('\npage refreshed..')
+	console.log('\n',currentItems)
 });
 
 
@@ -231,9 +232,9 @@ app.get('/', function (req,res) {
 
 
 
-app.get('/login', function (req,res) {
+/*app.get('/login', function (req,res) {
 	res.render('login');
-});
+});*/
 
 
 
@@ -262,18 +263,79 @@ app.get('/logout', function (req,res) {
 app.post('/add', function (req,res) {
 	/* body... */
 	var newItem = req.body.newItem;
+	newItem = validateUserInputNameStringChars(newItem, '/');
+
 	console.log(newItem);
 
 
+	var list_name_value_lower = '';
+	var possible_name_value_lower = newItem.toLowerCase();
+
+	for (var i = person_object_list.length - 1; i >= 0; i--) {
+
+		list_name_value_lower = person_object_list[i].firstName.toLowerCase();
+
+		if (list_name_value_lower === possible_name_value_lower) {
+
+			// HERE IS WHERE THE SET PERSON OBJECT FUNC WILL BE
+
+			// do stuff like update current persons away status
+			//console.log('MATH FOUND! => ', person_object_list[i])
+			currentPersonObject = person_object_list[i];
+			currentPersonObject.isPresent = true;
+
+
+
+
+
+			console.log('SIGNING OUT => ', person_object_list[i]);
+
+
+
+
+
+
+		};
+
+	};
+
+
+
+
+
+
 	// do not push until input text is validated !!!!!!!
-/*	currentItems.push({
-		num: currentItems.length + 1,
-		lastName: newItem
-	});*/
+	/*
+		currentItems.push({
+			num: currentItems.length + 1,
+			lastName: newItem
+		});
+	*/
 
 	res.redirect('/');
 
 });
+
+
+
+
+
+
+
+app.get('/api/data', ensureAuthenticated, function (req,res){
+	res.json([
+	{ value : "foo" },
+	{ value : "bar" },
+	{ value : "baz" }
+	])
+} )
+
+
+
+
+
+
+
 
 
 
@@ -286,8 +348,47 @@ app.listen(PORT,function () {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // VIEW CONTROLLER FUNCTIONS USING JSON ==============================
 
+
+
+function getAllFullNamesFromObjectList (argument) {
+	// get full names from object list argument
+	var list = [];
+	argument.forEach( function(item) {
+		if (item.isPresent == true) {
+			list.push(item.firstName);
+		}
+	});
+	return list;
+}
+
+
+function getAllPresentPersonObjects (argument) {
+	// takes list of all person objs and returns list of person objects that are present
+	var list = [];
+	argument.forEach( function(item) {
+		if (item.isPresent == true) {
+			list.push(item);
+		}
+	});
+	return list;
+}
 
 
 
@@ -377,6 +478,26 @@ function createPersonDatabase (argument) {
 	return object_list;
 }// end  create db def
 
+
+
+function validateUserInputNameStringChars(str, delimiter) {
+	// delimiter is what to escape
+	//  discuss at: http://phpjs.org/functions/preg_quote/
+	// original by: booeyOH
+	// improved by: Ates Goral (http://magnetiq.com)
+	// improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+	// improved by: Brett Zamir (http://brett-zamir.me)
+	// bugfixed by: Onno Marsman
+	//   example 1: preg_quote("$40");
+	//   returns 1: '\\$40'
+	//   example 2: preg_quote("*RRRING* Hello?");
+	//   returns 2: '\\*RRRING\\* Hello\\?'
+	//   example 3: preg_quote("\\.+*?[^]$(){}=!<>|:");
+	//   returns 3: '\\\\\\.\\+\\*\\?\\[\\^\\]\\$\\(\\)\\{\\}\\=\\!\\<\\>\\|\\:'
+
+	return String(str)
+		.replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + (delimiter || '') + '-]', 'g'), '\\$&');
+}// end string validation
 
 
 
