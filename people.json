@@ -2,9 +2,9 @@
 	"databaseName":"Current Residents",
 	"people" :
 	[
-		{ "num" : 0, "lastName" : "Brown", "firstName" : "Rich", "isPresent" : false},
-		{ "num" : 1, "lastName": "Phung", "firstName" : "Eric", "isPresent" : true},
-		{ "num" : 2, "lastName": "Hunt", "firstName" : "Cheryl", "isPresent" : false}
+		{ "num" : 0, "lastName" : "Brown", "firstName" : "Rich", "isPresent" : true, "isStaff": true },
+		{ "num" : 1, "lastName": "Phung", "firstName" : "Eric", "isPresent" : true, "isStaff": true },
+		{ "num" : 2, "lastName": "Hunt", "firstName" : "Cheryl", "isPresent" : false, "isStaff": false }
 
 	]
 }

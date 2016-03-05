@@ -124,6 +124,9 @@ app.use(express.static(path.join(__dirname,'bower_components')));
 ]*/
 
 
+currentItems = getAllFullNames();
+
+
 
 
 
@@ -158,7 +161,6 @@ app.post('/add', function (req,res) {
 
 
 app.listen(PORT,function () {
-	currentItems = getAllPresent();
 	console.log(currentItems)
 	/* body... */
 	console.log('ready on port ' + PORT)
@@ -198,7 +200,7 @@ function getAllFirstNames (argument) {
 	return list;
 }
 
-function getAllHumanNames (argument) {
+function getAllFullNames (argument) {
 	// get all last name properties as list
 	var list = [];
 	jsonContent.people.forEach(function (item) {
