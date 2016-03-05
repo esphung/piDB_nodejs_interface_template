@@ -6,6 +6,10 @@
 
 var http = require('http');
 var express = require('express');
+var passport = require('passport');
+var passportLocal = require('passport-local');
+var cookieParser = require('cookie-parser');
+var expressSession = require('express-session');
 var path = require('path');
 var bodyParser = require('body-parser');
 var jsonfile = require('jsonfile')
@@ -27,7 +31,7 @@ var test_jq = require('./testjq.js');
 // local vars
 const PORT = 8000;
 var app = express();
-var currentItems = [];
+//var currentItems = [];
 var contents = fs.readFileSync("people.json");
 // Define to JSON type
 var jsonContent = JSON.parse(contents);
@@ -38,33 +42,6 @@ var new_person = new Person();
 
 
 
-
-
-
-
-
-
-
-/*// Example Class Constructor
-function Foo(bar) {
-  // always initialize all instance properties
-  this.bar = bar;
-  this.baz = 'baz'; // default value
-}
-// class methods
-Foo.prototype.fooBar = function() {
-	console.log(this.bar)// test
-};
-// export the class
-module.exports = Foo;
-
-
-
-// constructor call
-var object = new Foo('Hello');
-
-// call method
-object.fooBar();*/
 
 
 
@@ -124,6 +101,7 @@ app.set('views',path.join(__dirname, 'views'));
 
 // use middleware ============================================
 
+
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
@@ -131,10 +109,76 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(path.join(__dirname,'bower_components')));
 
 
+app.use(cookieParser());
+app.use(expressSession({
+	secret: process.env.SESSION_SECRET || 'secret',
+	resave: false,
+	saveUninitialized: false
+}));
+
+
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 
 
+passport.use(new passportLocal.Strategy(function (username,password, done) {
+	possible_usernames = getAllFirstNames();
+	possible_usernames.forEach( function(item) {
+		console.log(item)
+		my_username = username.toLowerCase();
+		my_username = my_username.replace(' ','');
+		if (my_username === item.toLowerCase()) {
+			done( null, {
+				id : username,
+				name : username
+			} );
+			console.log('SUCCESSFUL LOGIN!')
+		}
+	});
+
+	// this is a dummy username and pw
+	// set up real stuff later
+/*	if (username === password) {
+		done( null, { id : username, name : username} );
+		console.log('SUCCESSFUL LOGIN!')
+
+	} else {
+		done(null,null);
+		console.log('LOGIN FAILED!')
+	}
+	*/
+}));
+
+
+
+
+passport.serializeUser(function (user, done) {
+	done(null, user.id);
+})
+
+
+passport.deserializeUser(function (id, done) {
+	// query database or cache here!
+	done(null, { id : id, name : id});
+})
+
+
+
+
+
+
+
+
+function ensureAuthenticated (req,res,next) {
+	if(req.isAuthenticated()){
+		next();
+	} else {
+		res.redirect('/login');
+	}
+}
 
 
 
@@ -152,22 +196,65 @@ app.use(express.static(path.join(__dirname,'bower_components')));
 
 
 
+app.get('/api/data', ensureAuthenticated, function (req,res){
+	res.json([
+	{ value : "foo" },
+	{ value : "bar" },
+	{ value : "baz" }
+	])
+} )
 
 
-currentItems = [];
+
+
 
 
 
 
 
 app.get('/', function (req,res) {
+
+	// use this to see who gets selected
+	var currentItems = [];
 	// load data from db to view here
 	res.render('index',{
+		isAuthenticated: req.isAuthenticated(),
+		user: req.user,
 		title: jsonContent.databaseName,
 		items: currentItems
 	});
 	console.log('\npage refreshed..')
 });
+
+
+
+
+
+
+app.get('/login', function (req,res) {
+	res.render('login');
+});
+
+
+
+
+app.post('/login', passport.authenticate('local'),function (req,res) {
+	// this is where passport will authenticate the user
+	res.redirect('/');
+
+});
+
+
+app.get('/logout', function (req,res) {
+	req.logout();
+	res.redirect('/');
+})
+
+
+
+
+
+
 
 
 
@@ -268,12 +355,10 @@ function createPersonDatabase (argument) {
 	// construct db person objects from json
 	jsonContent.people.forEach(function (item) {
 		new_person = new Person(item.id_num,item.lastName,item.firstName,item.isPresent,item.isStaff);
-
-
 		object_list.push(new_person);
 
 	})
-	console.log("DataBase Name: ", jsonContent.databaseName);
+	//console.log("DataBase Name: ", jsonContent.databaseName);
 	//console.log("DataBase Records: ",jsonContent.people);
 
 	console.log("\n * Finished Database * \n");

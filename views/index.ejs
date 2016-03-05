@@ -42,13 +42,35 @@
         	<% } %>
         </ul>
 
-        <form action="/add" method="post" accept-charset="utf-8">
+<!--         <form action="/add" method="post" accept-charset="utf-8">
         	<input type="text" name="newItem">
         	<input class="btn btn-default" type="submit">
         </form>
-
+ -->
 
         </div>
+
+
+
+
+        <div class="container">
+
+            <% if(!isAuthenticated) { %>
+            <a class="btn btn-default" href="/login">Log In Here</a>
+            <% } else { %>
+            <h3>Welcome, <%= user.name %>!</h3>
+            <br>
+            <a class="btn btn-default" href="/api/data">Info Page</a>
+            <a class="btn btn-default" href="/logout">Log Out</a>
+            <% } %>
+
+        </div>
+
+
+
+
+
+
 
 
 
