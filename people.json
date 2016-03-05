@@ -2,7 +2,13 @@
 	"databaseName":"Current Residents",
 	"people" :
 	[
-		{ "id_num" : 0, "lastName" : "Brown", "firstName" : "Rich", "isPresent" : true, "isStaff": true },
+		{
+			"id_num" : 0,
+			"lastName" : "Brown",
+			"firstName" : "Rich",
+			"isPresent" : true,
+			"isStaff": true },
+
 		{ "id_num" : 1, "lastName": "Phung", "firstName" : "Eric", "isPresent" : true, "isStaff": true },
 		{ "id_num" : 2, "lastName": "Hunt", "firstName" : "Cheryl", "isPresent" : false, "isStaff": false }
 

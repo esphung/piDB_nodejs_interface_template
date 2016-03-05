@@ -31,6 +31,8 @@ var currentItems = [];
 var contents = fs.readFileSync("people.json");
 // Define to JSON type
 var jsonContent = JSON.parse(contents);
+var person_object_list = createPersonDatabase();
+var new_person = new Person();
 
 
 
@@ -38,7 +40,12 @@ var jsonContent = JSON.parse(contents);
 
 
 
-// Example Constructor
+
+
+
+
+
+/*// Example Class Constructor
 function Foo(bar) {
   // always initialize all instance properties
   this.bar = bar;
@@ -52,11 +59,43 @@ Foo.prototype.fooBar = function() {
 module.exports = Foo;
 
 
+
 // constructor call
 var object = new Foo('Hello');
 
 // call method
-object.fooBar();
+object.fooBar();*/
+
+
+
+
+
+// =============================== Person Class Constructor !!!
+function Person() {
+	// always initialize all instance properties
+	this.id_num = 		null;
+	this.lastName = 	null; // default value
+	this.firstName = 	null;
+	this.isPresent = 	false;
+	this.isStaff = 		false;
+}// end null constructor
+
+function Person(num,l_name,f_name,is_present_bool,is_staff_bool) {
+	this.id_num = 		num;
+	this.lastName = 	l_name;
+	this.firstName = 	f_name;
+	this.isPresent = 	is_present_bool;
+	this.isStaff = 		is_staff_bool;
+}// end overload constructor
+
+
+// class methods
+Person.prototype.getMyIdNum = function() {
+	return this.id_num;
+};
+Person.prototype.setMyIdNum = function (num) {
+	this.id_num = num;
+}
 
 
 
@@ -64,16 +103,14 @@ object.fooBar();
 
 
 
-// configure app
+
+
+
+
+
+// configure app ===========================================
 app.set('view engine','ejs');
 app.set('views',path.join(__dirname, 'views'));
-console.log("\n * Creating Database * \n");
-// Get content from file
-
-// Get Value from JSON
-console.log("DataBase Name: ", jsonContent.databaseName);
-console.log("DataBase Records: ",jsonContent.people);
-console.log("\n * Finished Database * \n");
 
 
 
@@ -85,8 +122,7 @@ console.log("\n * Finished Database * \n");
 
 
 
-
-// use middleware
+// use middleware ============================================
 
 app.use(bodyParser.urlencoded({
 	extended: true
@@ -106,23 +142,6 @@ app.use(express.static(path.join(__dirname,'bower_components')));
 
 
 
-//var currentItems = peopleDatabase.people.id;
-
-//console.log(currentItems)
-
-/*var people_json = jsonfile.readFile(file, function(err, obj) {
-  console.dir(obj);
-});*/
-
-//var people_json = jsonfile.readFileSync(file)
-
-
-
-
-
-
-
-
 
 /*var currentItems = [
 	{ id: 1, desc: 'Eric' },
@@ -131,7 +150,11 @@ app.use(express.static(path.join(__dirname,'bower_components')));
 ]*/
 
 
-currentItems = getAllFullNames();
+
+
+
+
+currentItems = [];
 
 
 
@@ -143,7 +166,7 @@ app.get('/', function (req,res) {
 		title: jsonContent.databaseName,
 		items: currentItems
 	});
-	console.log('page refreshed..')
+	console.log('\npage refreshed..')
 });
 
 
@@ -169,7 +192,6 @@ app.post('/add', function (req,res) {
 
 
 app.listen(PORT,function () {
-	console.log(currentItems)
 	/* body... */
 	console.log('ready on port ' + PORT)
 });
@@ -177,7 +199,10 @@ app.listen(PORT,function () {
 
 
 
-// VIEW CONTROLLER FUNCTIONS ==============================
+// VIEW CONTROLLER FUNCTIONS USING JSON ==============================
+
+
+
 
 function getAllIdNums (argument) {
 	// get all last name properties as list
@@ -227,6 +252,46 @@ function getAllPresent (argument) {
 	})
 	return list;
 }
+
+
+
+
+
+
+
+
+function createPersonDatabase (argument) {
+	var object_list = [];
+	// Get contents from file
+	console.log("\n * Creating Database * \n");
+
+	// construct db person objects from json
+	jsonContent.people.forEach(function (item) {
+		new_person = new Person(item.id_num,item.lastName,item.firstName,item.isPresent,item.isStaff);
+
+
+		object_list.push(new_person);
+
+	})
+	console.log("DataBase Name: ", jsonContent.databaseName);
+	//console.log("DataBase Records: ",jsonContent.people);
+
+	console.log("\n * Finished Database * \n");
+
+
+	// debug search for staff members
+	for (var i = object_list.length - 1; i >= 0; i--) {
+		if (object_list[i].isStaff == true) {
+			console.log('staff member => ' + object_list[i].firstName + " " + object_list[i].lastName);
+		};
+
+
+
+	};
+	console.log("RECORDS FOUND: " + object_list.length);
+	return object_list;
+}// end  create db def
+
 
 
 
