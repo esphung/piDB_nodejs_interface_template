@@ -11,7 +11,14 @@ var bodyParser = require('body-parser');
 var jsonfile = require('jsonfile')
 var util = require('util')
 var fs = require('fs')
+//var jq = require('jquery');
+//var jsdom = require('jsdom');
 
+
+
+
+// included external files
+var test_jq = require('./testjq.js');
 
 
 
@@ -31,7 +38,7 @@ var jsonContent = JSON.parse(contents);
 
 
 
-// Constructor
+// Example Constructor
 function Foo(bar) {
   // always initialize all instance properties
   this.bar = bar;
@@ -136,6 +143,7 @@ app.get('/', function (req,res) {
 		title: jsonContent.databaseName,
 		items: currentItems
 	});
+	console.log('page refreshed..')
 });
 
 
@@ -171,11 +179,11 @@ app.listen(PORT,function () {
 
 // VIEW CONTROLLER FUNCTIONS ==============================
 
-function getAllNums (argument) {
+function getAllIdNums (argument) {
 	// get all last name properties as list
 	var list = [];
 	jsonContent.people.forEach(function (item) {
-		list.push(item.num);
+		list.push(item.id_num);
 		//console.log(item.lastName);
 	})
 	return list;
