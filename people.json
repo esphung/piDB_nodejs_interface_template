@@ -1,0 +1,10 @@
+{
+	"databaseName":"Current Residents",
+	"people" :
+	[
+		{ "id" : 0, "lastName" : "Brown", "firstName" : "Rich", "isPresent" : false},
+		{ "id" : 1, "lastName": "Phung", "firstName" : "Eric", "isPresent" : false},
+		{ "id" : 2, "lastName": "Hunt", "firstName" : "Cheryl", "isPresent" : false}
+
+	]
+}
