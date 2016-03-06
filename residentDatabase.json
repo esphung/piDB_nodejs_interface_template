@@ -1,5 +1,5 @@
 {
-  "databaseName": "Resident Database From JSON",
+  "databaseName": "Resident Sign Out Sheet",
   "residents": [
     {
       "id_num": "0000",

@@ -112,6 +112,7 @@ app.get('/', function (req,res) {
 		user: req.user,*/
 		list_title: "Currently Present",
 		title: jsonContent.databaseName,
+		presentResidentsList: getAllPresentPersonObjects(residentList),
 		items: currentItemsList
 	});
 	console.log('\npage refreshed..')
