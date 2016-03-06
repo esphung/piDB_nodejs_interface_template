@@ -6,23 +6,12 @@
 
 var http = require('http');
 var express = require('express');
-var passport = require('passport');
-var passportLocal = require('passport-local');
-var cookieParser = require('cookie-parser');
-var expressSession = require('express-session');
 var path = require('path');
 var bodyParser = require('body-parser');
 var jsonfile = require('jsonfile')
 var util = require('util')
 var fs = require('fs')
-//var jq = require('jquery');
-//var jsdom = require('jsdom');
 
-
-
-
-// included external files
-var test_jq = require('./testjq.js');
 
 
 
@@ -32,12 +21,10 @@ var test_jq = require('./testjq.js');
 // local vars
 const PORT = 8000;
 var app = express();
-//var currentItems = [];
 var contents = fs.readFileSync("people.json");
-// Define to JSON type
 var jsonContent = JSON.parse(contents);
-var person_object_list = createPersonDatabase();
-var new_person = new Person();
+var person_object_list = getPersonDatabase();
+
 var currentPersonObject = new Person();
 
 
@@ -48,32 +35,6 @@ var currentPersonObject = new Person();
 
 
 
-// =============================== Person Class Constructor !!!
-function Person() {
-	// always initialize all instance properties
-	this.id_num = 		null;
-	this.lastName = 	null; // default value
-	this.firstName = 	null;
-	this.isPresent = 	false;
-	this.isStaff = 		false;
-}// end null constructor
-
-function Person(num,l_name,f_name,is_present_bool,is_staff_bool) {
-	this.id_num = 		num;
-	this.lastName = 	l_name;
-	this.firstName = 	f_name;
-	this.isPresent = 	is_present_bool;
-	this.isStaff = 		is_staff_bool;
-}// end overload constructor
-
-
-// class methods
-Person.prototype.getMyIdNum = function() {
-	return this.id_num;
-};
-Person.prototype.setMyIdNum = function (num) {
-	this.id_num = num;
-}
 
 
 
@@ -110,94 +71,6 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(path.join(__dirname,'bower_components')));
 
 
-app.use(cookieParser());
-app.use(expressSession({
-	secret: process.env.SESSION_SECRET || 'secret',
-	resave: false,
-	saveUninitialized: false
-}));
-
-
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-
-
-
-passport.use(new passportLocal.Strategy(function (username,password, done) {
-	possible_usernames = getAllFirstNames();
-	possible_usernames.forEach( function(item) {
-		console.log(item)
-		my_username = username.toLowerCase();
-		my_username = my_username.replace(' ','');
-		if (my_username === item.toLowerCase()) {
-			done( null, {
-				id : username,
-				name : username
-			} );
-			console.log('SUCCESSFUL LOGIN!')
-		}
-	});
-
-	// this is a dummy username and pw
-	// set up real stuff later
-/*	if (username === password) {
-		done( null, { id : username, name : username} );
-		console.log('SUCCESSFUL LOGIN!')
-
-	} else {
-		done(null,null);
-		console.log('LOGIN FAILED!')
-	}
-	*/
-}));
-
-
-
-
-passport.serializeUser(function (user, done) {
-	done(null, user.id);
-})
-
-
-passport.deserializeUser(function (id, done) {
-	// query database or cache here!
-	done(null, { id : id, name : id});
-})
-
-
-
-
-
-
-
-
-function ensureAuthenticated (req,res,next) {
-	if(req.isAuthenticated()){
-		next();
-	} else {
-		res.redirect('/login');
-	}
-}
-
-
-
-
-// initializ current items list values to first names of Present People
-var currentItems = getAllPresentPersonObjects(person_object_list);// must be global to this page
-currentItems = getAllFullNamesFromObjectList(currentItems);
-
-
-
-
-
-
-/*var currentItems = [
-	{ id: 1, desc: 'Eric' },
-	{ id: 2, desc: 'Cheryl' },
-	{ id: 3, desc: 'Avery' }
-]*/
 
 
 
@@ -210,15 +83,16 @@ currentItems = getAllFullNamesFromObjectList(currentItems);
 
 
 app.get('/', function (req,res) {
-	currentItems = getAllPresentPersonObjects(person_object_list);// must be global to this page
+	// initializ current items list values to first names of Present People
+	var currentItems = getAllPresentPersonObjects(person_object_list);// must be global to this page
 	currentItems = getAllFullNamesFromObjectList(currentItems);
 
 
 	// use this to see who gets selected
 	// load data from db to view here
 	res.render('index',{
-		isAuthenticated: req.isAuthenticated(),
-		user: req.user,
+/*		isAuthenticated: req.isAuthenticated(),
+		user: req.user,*/
 		list_title: "Currently Present",
 		title: jsonContent.databaseName,
 		items: currentItems
@@ -226,31 +100,6 @@ app.get('/', function (req,res) {
 	console.log('\npage refreshed..')
 	console.log('\n',currentItems)
 });
-
-
-
-
-
-
-/*app.get('/login', function (req,res) {
-	res.render('login');
-});*/
-
-
-
-
-app.post('/login', passport.authenticate('local'),function (req,res) {
-	// this is where passport will authenticate the user
-	res.redirect('/');
-
-});
-
-
-app.get('/logout', function (req,res) {
-	req.logout();
-	res.redirect('/');
-})
-
 
 
 
@@ -300,18 +149,6 @@ app.post('/add', function (req,res) {
 	};
 
 
-
-
-
-
-	// do not push until input text is validated !!!!!!!
-	/*
-		currentItems.push({
-			num: currentItems.length + 1,
-			lastName: newItem
-		});
-	*/
-
 	res.redirect('/');
 
 });
@@ -319,16 +156,6 @@ app.post('/add', function (req,res) {
 
 
 
-
-
-
-app.get('/api/data', ensureAuthenticated, function (req,res){
-	res.json([
-	{ value : "foo" },
-	{ value : "bar" },
-	{ value : "baz" }
-	])
-} )
 
 
 
@@ -341,7 +168,7 @@ app.get('/api/data', ensureAuthenticated, function (req,res){
 
 
 app.listen(PORT,function () {
-	/* body... */
+	// tell our server to start listening
 	console.log('ready on port ' + PORT)
 });
 
@@ -392,54 +219,6 @@ function getAllPresentPersonObjects (argument) {
 
 
 
-function getAllIdNums (argument) {
-	// get all last name properties as list
-	var list = [];
-	jsonContent.people.forEach(function (item) {
-		list.push(item.id_num);
-		//console.log(item.lastName);
-	})
-	return list;
-}
-
-function getAllLastNames (argument) {
-	// get all last name properties as list
-	var list = [];
-	jsonContent.people.forEach(function (item) {
-		list.push(item.lastName);
-		//console.log(item.lastName);
-	})
-	return list;
-}
-
-function getAllFirstNames (argument) {
-	// get all last name properties as list
-	var list = [];
-	jsonContent.people.forEach(function (item) {
-		list.push(item.firstName);
-	})
-	return list;
-}
-
-function getAllFullNames (argument) {
-	// get all last name properties as list
-	var list = [];
-	jsonContent.people.forEach(function (item) {
-		list.push(item.firstName + " " + item.lastName);
-	})
-	return list;
-}
-
-function getAllPresent (argument) {
-	// get all last name properties as list
-	var list = [];
-	jsonContent.people.forEach(function (item) {
-		if (item.isPresent == true) {
-			list.push(item.firstName + " " + item.lastName);
-		};
-	})
-	return list;
-}
 
 
 
@@ -448,7 +227,12 @@ function getAllPresent (argument) {
 
 
 
-function createPersonDatabase (argument) {
+
+
+
+
+function getPersonDatabase (argument) {
+	var new_person = new Person();
 	var object_list = [];
 	// Get contents from file
 	console.log("\n * Creating Database * \n");
@@ -500,4 +284,32 @@ function validateUserInputNameStringChars(str, delimiter) {
 }// end string validation
 
 
+
+
+// =============================== Person Class Constructor !!!
+function Person() {
+	// always initialize all instance properties
+	this.id_num = 		null;
+	this.lastName = 	null; // default value
+	this.firstName = 	null;
+	this.isPresent = 	false;
+	this.isStaff = 		false;
+}// end null constructor
+
+function Person(num,l_name,f_name,is_present_bool,is_staff_bool) {
+	this.id_num = 		num;
+	this.lastName = 	l_name;
+	this.firstName = 	f_name;
+	this.isPresent = 	is_present_bool;
+	this.isStaff = 		is_staff_bool;
+}// end overload constructor
+
+
+// class methods
+Person.prototype.getMyIdNum = function() {
+	return this.id_num;
+};
+Person.prototype.setMyIdNum = function (num) {
+	this.id_num = num;
+}
 
