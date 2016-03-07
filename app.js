@@ -98,7 +98,7 @@ app.use(express.static(path.join(__dirname,'bower_components')));
 
 
 
-
+// when client get requests the root page
 app.get('/', function (req,res) {
 
 	var currentItemsList = getAllPresentPersonObjects(residentList)
@@ -110,9 +110,11 @@ app.get('/', function (req,res) {
 	res.render('index',{
 /*		isAuthenticated: req.isAuthenticated(),
 		user: req.user,*/
-		list_title: "Currently Present",
+		presentTableTitle: "Residents Currently Home",
+		notPresentTableTitle: "Residents Currently Signed Out",
 		title: jsonContent.databaseName,
 		presentResidentsList: getAllPresentPersonObjects(residentList),
+		notPresentResidentsList: getAllNotPresentPersonObjects(residentList),
 		items: currentItemsList
 	});
 	console.log('\npage refreshed..')
@@ -127,57 +129,17 @@ app.get('/', function (req,res) {
 
 
 
-/*
-app.post('/add', function (req,res) {
-	var newItem = req.body.newItem;
-	newItem = stripUserInputString(newItem, '/');
-
-	console.log(newItem);
-
-
-	var list_name_value_lower = '';
-	var possible_name_value_lower = newItem.toLowerCase();
-
-	for (var i = residentList.length - 1; i >= 0; i--) {
-
-		list_name_value_lower = residentList[i].firstName.toLowerCase();
-
-		if (list_name_value_lower === possible_name_value_lower) {
-
-			// HERE IS WHERE THE SET PERSON OBJECT FUNC WILL BE
-
-			// do stuff like update current persons away status
-			//console.log('MATH FOUND! => ', residentList[i])
-			currentPersonObject = residentList[i];
-			currentPersonObject.isPresent = true;
-
-
-
-
-
-			console.log('SIGNING OUT => ', residentList[i]);
-
-
-
-		};
-
-	};
-
-
-	res.redirect('/');
-
-});*/
-
-
-
 
 
 app.post('/add', function (req,res) {
 
 	var newItem = req.body.newItem;
+	var newTextReason = req.body.newTextReason;
+
 	newItem = stripUserInputString(newItem, '/');
-	var list_name_value_lower = '';
-	var possible_name_value_lower = newItem.toLowerCase();
+	//var list_name_value_lower = '';
+	//var possible_name_value_lower = newItem.toLowerCase();
+
 
 
 	for (var i = residentList.length - 1; i >= 0; i--) {
@@ -190,52 +152,6 @@ app.post('/add', function (req,res) {
 		};
 	};
 
-
-
-
-/*
-	if (isNaN(newItem) == true) {
-
-
-		// check if input is a residents last name
-		for (var i = residentList.length - 1; i >= 0; i--) {
-			list_name_value_lower = residentList[i].firstName.toLowerCase();
-			if (residentList[i].lastName.toLowerCase() == newItem.toLowerCase()) {
-
-				residentList[i].toggleIsPresent();
-				selectedResident = residentList[i];
-				//selectedResident.isPresent = true;
-
-
-				console.log(residentList[i].getFullName() + " was signed out..");
-				res.redirect('/');
-				return;
-
-			}// end if
-
-		} // end isNaN check
-
-
-	} else {
-		// input is a number so handle accordingly
-		var num = newItem;
-		console.log(newItem);
-
-		for (var i = residentList.length - 1; i >= 0; i--) {
-			if (residentList[i].id_num == num) {
-
-				residentList[i].toggleIsPresent();
-				selectedResident = residentList[i];
-				//selectedResident.isPresent = true;
-
-
-				console.log(residentList[i].getFullName() + " was signed out..");
-
-			}// end if
-
-		} // end isNaN check
-
-	}*/
 
 
 	res.redirect('/');
@@ -333,6 +249,16 @@ function getAllPresentPersonObjects (argument) {
 	return list;
 }
 
+function getAllNotPresentPersonObjects (argument) {
+	// takes list of all person objs and returns list of person objects that are present
+	var list = [];
+	argument.forEach( function(item) {
+		if (item.isPresent != true) {
+			list.push(item);
+		}
+	});
+	return list;
+}
 
 
 

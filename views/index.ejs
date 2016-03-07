@@ -3,137 +3,119 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>My App</title>
-        <link rel="stylesheet" type="text/css" href="bootstrap/dist/css/bootstrap.css">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title><%= title %></title>
+    <link rel="stylesheet" type="text/css" href="bootstrap/dist/css/bootstrap.css">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="jquery/dist/jquery.js"></script>
+    <script src="bootstrap/dist/js/bootstrap.js"></script>
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    @-moz-document url-prefix() {
+        fieldset { display: table-cell; }
+    }
 
-
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-
-        <script src="jquery/dist/jquery.js"></script>
-        <script src="bootstrap/dist/js/bootstrap.js"></script>
-
-
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    </head>
-    <body>
-
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
-
-        <!-- Add your site or application content here -->
-
-        <div class="container body_div">
-
-
-
+    </style>
+</head>
+<body>
+    <!--[if lt IE 7]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <!-- Add your site or application content here -->
+    <div class="container body_div">
         <div class="container">
             <h1><%= title %></h1>
         </div>
-
-
-
-
-
+        <!-- DISPLAY TABLE OF RESIDENTS CURRENTLY PRESENT -->
         <div class="container">
-            <h1 class="lead"><%= list_title %></h1>
+            <h1 class="lead"><%= presentTableTitle %></h1>
         </div>
-
-
-
-
-
-        <div class="container">
-            <ul>
-                <% for (var i = 0; i < items.length; i++) { %>
-                    <li><%= items[i] %></li>
-                <% } %>
-            </ul>
-        </div>
-
-
-        <div class="container">
-
-
-
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>#</th>
-
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Reason</th>
-                </tr>
-                </thead>
-
-            <tbody>
-
-                <% for (var i = 0; i < presentResidentsList.length; i++) { %>
+        <div class="container residents-in-table-box">
+            <table class="table table-bordered table-condensed table-hover">
+                <thead>
                     <tr>
-                    <th scope="row"><%= i %></th>
-                    <td><%= presentResidentsList[i].firstName %></td>
-                    <td><%= presentResidentsList[i].lastName %></td>
-                    <td><%= presentResidentsList[i].reasonNotPresent %></td>
+                        <th scope="row">#</th>
+                        <th class="col-lg-4">First Name</th>
+                        <th>Last Name</th>
+                        <th>Time In</th>
+                        <th class="col-lg-2">Notes</th>
                     </tr>
-                <% } %>
-
-
+                </thead>
+                <tbody>
+                    <% for (var i = 0; i < presentResidentsList.length; i++) { %>
+                    <tr>
+                        <th scope="row"><%= i %></th>
+                        <td><%= presentResidentsList[i].firstName %></td>
+                        <td><%= presentResidentsList[i].lastName %></td>
+                        <td><!--  --></td>
+                        <td><!--  --></td>
+                    </tr>
+                    <% } %>
                 </tbody>
-
             </table>
-
-
         </div>
-
-
-
-
-
-
-
-
         <div class="container">
-            <form action="/add" method="post">
-                <input type="text" name="newItem" placeholder="Enter ID Number" autocomplete="off" autofocus>
-                <input class="btn btn-default" type="submit" value="Submit">
-            </form>
+            <!-- Trigger the modal with a button -->
+            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Sign Out</button>
         </div>
-
-
-
-
-
-
-
-
+        <!-- THIS TABLE SHOWS THE RESIDENTS THAT ARE CURRENTLY AWAY FORM THE HOUSE -->
+        <div class="container">
+            <h1 class="lead"><%= notPresentTableTitle %></h1>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </body>
-
-
+        <div class="container residents-out-table-box">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="row">#</th>
+                        <th class="col-lg-4" >First Name</th>
+                        <th>Last Name</th>
+                        <th>Time Out</th>
+                        <th class="col-lg-2">Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i = 0; i < notPresentResidentsList.length; i++) { %>
+                    <tr>
+                        <th scope="row"><%= i %></th>
+                        <td><%= notPresentResidentsList[i].firstName %></td>
+                        <td><%= notPresentResidentsList[i].lastName %></td>
+                        <td><!--  --></td>
+                        <td><!--  --></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Trigger the modal with a button -->
+    <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button> -->
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <form action="/add" method="post">
+                            <input type="text" name="newItem" placeholder="Enter ID Number" autocomplete="off" autofocus="on">
+                            <input class="btn btn-default" type="submit" value="Submit">
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
 </html>

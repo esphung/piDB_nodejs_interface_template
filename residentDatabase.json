@@ -5,21 +5,21 @@
       "id_num": "0000",
       "firstName": "Rich",
       "lastName": "Brown",
-      "isPresent": false,
+      "isPresent": true,
       "reasonNotPresent": null
     },
     {
       "id_num": "0001",
       "firstName": "Eric",
       "lastName": "Phung",
-      "isPresent": false,
+      "isPresent": true,
       "reasonNotPresent": null
     },
     {
       "id_num": "0002",
       "firstName": "Cheryl",
       "lastName": "Hunt",
-      "isPresent": false,
+      "isPresent": true,
       "reasonNotPresent": null
     }
   ]
