@@ -28,6 +28,66 @@
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     <!-- Add your site or application content here -->
+
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">New Resident</h4>
+          </div>
+          <div class="modal-body">
+            <p>Fill out this form to register a new resident.</p>
+
+
+
+            <form id="newResidentForm" action="/new" method="post" onsubmit="return validateForm()">
+              <fieldset class="form-group">
+                <label for="formGroupExampleInput">Pin Number</label>
+                <input name="newPinNumber" type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Pin Here" autocomplete="off" autocomplete="off">
+              </fieldset>
+              <fieldset class="form-group">
+                <label for="formGroupExampleInput2">First Name</label>
+                <input name="newFirstName" type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter First Name Here" autocomplete="off" autocomplete="off">
+              </fieldset>
+              <fieldset class="form-group">
+                <label for="formGroupExampleInput3">Last Name</label>
+                <input name="newLastName" type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter Last Name Here" autocomplete="off" autocomplete="off">
+              </fieldset>
+
+              <fieldset class="form-group">
+                <label for="formGroupExampleInput4">Staff Passphrase</label>
+                <input name="staffPassphrase" type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter the secret passphrase" autocomplete="off" autocomplete="off">
+              </fieldset>
+
+              <input class="btn btn-default" type="submit" value="Submit">
+            </form>
+
+
+
+
+
+
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+
+
+
+
+
     <div class="container body_div">
         <div class="container">
             <h1><%= title %></h1>
@@ -62,7 +122,7 @@
         </div>
         <div class="container">
             <!-- Trigger the modal with a button -->
-            <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal">Sign Out / Sign In</button>
+            <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#mySignInSignOutModal">Sign Out / Sign In</button>
         </div>
         <!-- THIS TABLE SHOWS THE RESIDENTS THAT ARE CURRENTLY AWAY FORM THE HOUSE -->
         <div class="container">
@@ -94,9 +154,9 @@
         </div>
     </div>
     <!-- Trigger the modal with a button -->
-    <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button> -->
+    <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#mySignInSignOutModal">Open Modal</button> -->
     <!-- Modal -->
-    <div id="myModal" class="modal fade" role="dialog">
+    <div id="mySignInSignOutModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
@@ -107,8 +167,8 @@
                 <div class="modal-body">
                     <div class="container">
                         <form action="/add" method="post">
-                            <input type="text" name="newItem" placeholder="Enter Pin Here" autocomplete="off" autofocus>
-                            <input id="reasonInputTextField" type="text" name="newReason" placeholder="Enter Reason Here">
+                            <input type="text" name="newItem" placeholder="Enter Pin Here" autocomplete="off">
+                            <input id="reasonInputTextField" type="text" name="newReason" placeholder="Enter Reason Here" autocomplete="off">
                             <input class="btn btn-default" type="submit" value="Submit">
                         </form>
                     </div>
@@ -118,10 +178,44 @@
                     <p>Enter your pin number and a reason if you want to sign out.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                    <button type="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#myModal">New Resident</button>
+
+
                 </div>
+
             </div>
         </div>
     </div>
+
+
+
+
+
+    <script>
+    function validateForm() {
+        var x = document.forms["newResidentForm"]["newPinNumber"].value;
+        var y = document.forms["newResidentForm"]["newFirstName"].value;
+        var z = document.forms["newResidentForm"]["newLastName"].value;
+        if (x == null || x == "") {
+            alert("Pin Number must be filled out");
+            return false;
+        }
+        if (y == null || y == "") {
+            alert("First Name must be filled out");
+            return false;
+        }
+        if (z == null || z == "") {
+            alert("Last Name must be filled out");
+            return false;
+        }
+    }
+
+
+    </script>
+
+
+
+
 </body>
 </html>

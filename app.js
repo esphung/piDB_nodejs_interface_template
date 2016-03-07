@@ -4,11 +4,7 @@ CREATED:            2016.03.03 (March 3, 2016)
 PURPOSE:            Controller for single page, Express Node Js web app.
 NOTES:
 
-* Add functionality for resident activity page for staff
-
-* Implement "userActivityData" jsn property
 */
-
 
 
 
@@ -114,8 +110,7 @@ app.get('/', function(req, res) {
     // use this to see who gets selected
     // load data from db to view here
     res.render('index', {
-        /*		isAuthenticated: req.isAuthenticated(),
-        		user: req.user,*/
+
         presentTableTitle: "Currently Home",
         notPresentTableTitle: "Currently Signed Out",
         title: jsonContent.databaseName,
@@ -131,6 +126,35 @@ app.get('/', function(req, res) {
 
 
 
+
+app.post('/new', function(req,res){
+
+    var staffPassphrase = req.body.staffPassphrase;
+
+    if (staffPassphrase == 'a') {
+        var newPinNumber = req.body.newPinNumber;
+        var newFirstName = req.body.newFirstName;
+        var newLastName = req.body.newLastName;
+
+
+        var item = {
+          "id_num": newPinNumber,
+          "firstName": newFirstName,
+          "lastName": newLastName,
+          "isPresent": true,
+          "timeStamp": null,
+          "reasonNotPresent": null
+        }
+    jsonContent['residents'].push(item)
+    jsonfile.writeFileSync("./models/activeDatabase.json", jsonContent)
+    residentList = getDatabaseResidents(jsonContent);
+    console.log(residentList)
+
+
+    };
+
+    res.redirect('/')
+})
 
 
 
