@@ -6,6 +6,7 @@
       "firstName": "Rich",
       "lastName": "Brown",
       "isPresent": true,
+      "timeStamp": null,
       "reasonNotPresent": null
     },
     {
@@ -13,6 +14,7 @@
       "firstName": "Eric",
       "lastName": "Phung",
       "isPresent": true,
+      "timeStamp": null,
       "reasonNotPresent": null
     },
     {
@@ -20,6 +22,7 @@
       "firstName": "Cheryl",
       "lastName": "Hunt",
       "isPresent": true,
+      "timeStamp": null,
       "reasonNotPresent": null
     }
   ]

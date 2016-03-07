@@ -20,6 +20,10 @@
         fieldset { display: table-cell; }
     }
 
+    ul {
+        list-style-type: none;
+    }
+
     </style>
 </head>
 <body>
@@ -43,17 +47,17 @@
                         <th class="col-lg-4">First Name</th>
                         <th>Last Name</th>
                         <th>Time In</th>
-                        <th class="col-lg-2">Notes</th>
+                        <!-- <th class="col-lg-2">Notes</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     <% for (var i = 0; i < presentResidentsList.length; i++) { %>
                     <tr>
-                        <th scope="row"><%= i %></th>
+                        <th><%= i %></th>
                         <td><%= presentResidentsList[i].firstName %></td>
                         <td><%= presentResidentsList[i].lastName %></td>
-                        <td><!--  --></td>
-                        <td><!--  --></td>
+                        <td><%= presentResidentsList[i].timeStamp %></td>
+                        <!-- <td></td> -->
                     </tr>
                     <% } %>
                 </tbody>
@@ -61,7 +65,7 @@
         </div>
         <div class="container">
             <!-- Trigger the modal with a button -->
-            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Sign Out</button>
+            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Sign Out/In</button>
         </div>
         <!-- THIS TABLE SHOWS THE RESIDENTS THAT ARE CURRENTLY AWAY FORM THE HOUSE -->
         <div class="container">
@@ -84,8 +88,8 @@
                         <th scope="row"><%= i %></th>
                         <td><%= notPresentResidentsList[i].firstName %></td>
                         <td><%= notPresentResidentsList[i].lastName %></td>
-                        <td><!--  --></td>
-                        <td><!--  --></td>
+                        <td><%= notPresentResidentsList[i].timeStamp %></td>
+                        <td><%= notPresentResidentsList[i].reasonNotPresent %></td>
                     </tr>
                     <% } %>
                 </tbody>
@@ -101,15 +105,28 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Modal Header</h4>
+                    <h4 class="modal-title">Enter 4-Digit Pin</h4>
                 </div>
                 <div class="modal-body">
                     <div class="container">
                         <form action="/add" method="post">
-                            <input type="text" name="newItem" placeholder="Enter ID Number" autocomplete="off" autofocus="on">
+
+
+                            <input type="text" name="newItem" placeholder="Enter Pin Here" autocomplete="off" autofocus>
+                            <input id="reasonInputTextField" type="text" name="newReason" placeholder="Enter Reason Here">
                             <input class="btn btn-default" type="submit" value="Submit">
+
+
+
+
+
+
                         </form>
                     </div>
+                                                <br>
+                            <p>Enter your pin number to sign in.</p>
+                            <p><strong>OR</strong></p>
+                            <p>Enter your pin number and a reason if you want to sign out.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -117,5 +134,25 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>

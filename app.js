@@ -47,16 +47,15 @@ var residentList = getDatabaseResidents(jsonContent);
 
 
 // list of reasons for not being home
-var reason_list = [
-    "None",
-    "Food",
-    "Church",
-    "Meeting",
-    "Probation",
-    "Court",
-    "Work",
-    "Other"
+var currentReasonsList = [
+	"Food",
+	"Church",
+	"Court",
+	"Work",
+	"Family",
+	"Holiday"
 ];
+
 
 
 
@@ -110,14 +109,15 @@ app.get('/', function (req,res) {
 	res.render('index',{
 /*		isAuthenticated: req.isAuthenticated(),
 		user: req.user,*/
-		presentTableTitle: "Residents Currently Home",
-		notPresentTableTitle: "Residents Currently Signed Out",
+		presentTableTitle: "Currently Home",
+		notPresentTableTitle: "Signed Out",
 		title: jsonContent.databaseName,
 		presentResidentsList: getAllPresentPersonObjects(residentList),
 		notPresentResidentsList: getAllNotPresentPersonObjects(residentList),
-		items: currentItemsList
+		items: currentItemsList,
+		reasons: currentReasonsList
 	});
-	console.log('\npage refreshed..')
+	console.log('\nPage was refreshed..')
 	console.log('\nCurrent Residents at Home: ',currentItemsList)
 });
 
@@ -131,23 +131,64 @@ app.get('/', function (req,res) {
 
 
 
+
+
 app.post('/add', function (req,res) {
 
-	var newItem = req.body.newItem;
-	var newTextReason = req.body.newTextReason;
+	var newItem = req.body.newItem;// this is an input's name attribute
+	var newReason = req.body.newReason;
+	console.log(newReason)
 
+
+	// get the current time as a human readable string
+	var d = new Date();
+	//newDate.setTime(unixtime*1000);
+	var timestamp = 1301090400
+	var newDate = new Date(timestamp*1000 + d.getTimezoneOffset() * 60000)
+	dateString = newDate.toUTCString();
+	console.log(dateString)
+
+
+	newReason = stripUserInputString(newReason, '/');
 	newItem = stripUserInputString(newItem, '/');
-	//var list_name_value_lower = '';
-	//var possible_name_value_lower = newItem.toLowerCase();
+
 
 
 
 	for (var i = residentList.length - 1; i >= 0; i--) {
 		if (newItem == residentList[i].id_num) {
-			residentList[i].toggleIsPresent();
-			selectedResident = residentList[i];
-			res.redirect('/');
-			return;
+
+
+			// check if user is signing IN
+			if (residentList[i].isPresent == false) {
+
+				residentList[i].toggleIsPresent();
+				residentList[i].timeStamp = dateString;
+				residentList[i].reasonNotPresent = null;
+				selectedResident = residentList[i];
+				res.redirect('/');
+				return;
+			} else{
+				// user is signing OUT
+
+				// check is they have a valid reason string to leave
+				if (newReason.length <= 0) {
+					res.redirect('/');
+					return;
+				} else {
+					residentList[i].toggleIsPresent();
+					residentList[i].timeStamp = dateString;
+					residentList[i].reasonNotPresent = newReason;
+					selectedResident = residentList[i];
+					res.redirect('/');
+					return;
+				}
+
+
+			}
+
+
+
 
 		};
 	};
@@ -210,6 +251,7 @@ function getDatabaseResidents (content) {
         	item.firstName,
         	item.lastName,
         	item.isPresent,
+        	this.timeStamp,
         	item.reasonNotPresent
         ));
     })
@@ -295,6 +337,7 @@ function Resident(){
     this.firstName = null;
     this.lastName = null;
     this.isPresent = true;
+    this.timeStamp = null;
     this.reasonNotPresent = null;
 }// end null def
 
@@ -305,6 +348,7 @@ function Resident(id_num,f_name,l_name,present_bool, reason){
     this.firstName = f_name;
     this.lastName = l_name;
     this.isPresent = present_bool;
+    this.timeStamp = null;
     if (reason != null){
         this.reasonNotPresent = reason;
     } else {
