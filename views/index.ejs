@@ -14,16 +14,13 @@
     <script src="jquery/dist/jquery.js"></script>
     <script src="bootstrap/dist/js/bootstrap.js"></script>
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-
     <style>
     @-moz-document url-prefix() {
-        fieldset { display: table-cell; }
+    fieldset { display: table-cell; }
     }
-
     ul {
-        list-style-type: none;
+    list-style-type: none;
     }
-
     </style>
 </head>
 <body>
@@ -65,7 +62,7 @@
         </div>
         <div class="container">
             <!-- Trigger the modal with a button -->
-            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Sign Out/In</button>
+            <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal">Sign Out / Sign In</button>
         </div>
         <!-- THIS TABLE SHOWS THE RESIDENTS THAT ARE CURRENTLY AWAY FORM THE HOUSE -->
         <div class="container">
@@ -110,23 +107,15 @@
                 <div class="modal-body">
                     <div class="container">
                         <form action="/add" method="post">
-
-
                             <input type="text" name="newItem" placeholder="Enter Pin Here" autocomplete="off" autofocus>
                             <input id="reasonInputTextField" type="text" name="newReason" placeholder="Enter Reason Here">
                             <input class="btn btn-default" type="submit" value="Submit">
-
-
-
-
-
-
                         </form>
                     </div>
-                                                <br>
-                            <p>Enter your pin number to sign in.</p>
-                            <p><strong>OR</strong></p>
-                            <p>Enter your pin number and a reason if you want to sign out.</p>
+                    <br>
+                    <p>Enter your pin number to sign in.</p>
+                    <p><strong>OR</strong></p>
+                    <p>Enter your pin number and a reason if you want to sign out.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -134,25 +123,5 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </body>
 </html>

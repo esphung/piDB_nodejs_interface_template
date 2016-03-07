@@ -8,7 +8,13 @@
       "isPresent": true,
       "timeStamp": null,
       "reasonNotPresent": null,
-      "userActivityData":[]
+      "userActivityData": [
+        {
+          "date": null,
+          "time": null,
+          "desc": null
+        }
+      ]
     },
     {
       "id_num": "0001",
@@ -17,7 +23,13 @@
       "isPresent": true,
       "timeStamp": null,
       "reasonNotPresent": null,
-      "userActivityData":[]
+      "userActivityData": [
+        {
+          "date": null,
+          "time": null,
+          "desc": null
+        }
+      ]
     },
     {
       "id_num": "0002",
@@ -26,7 +38,13 @@
       "isPresent": true,
       "timeStamp": null,
       "reasonNotPresent": null,
-      "userActivityData": []
+      "userActivityData": [
+        {
+          "date": null,
+          "time": null,
+          "desc": null
+        }
+      ]
     }
   ]
 }
