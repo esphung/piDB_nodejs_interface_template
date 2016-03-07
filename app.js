@@ -42,7 +42,7 @@ var jsonContent = JSON.parse(databaseFilecontents);
 // create list of residents found in file
 var residentList = getDatabaseResidents(jsonContent);
 
-
+var myWriteFileValuePath = './models/activeDatabase.json'
 
 // list of reasons for not being home
 var currentReasonsList = [
@@ -192,8 +192,13 @@ app.post('/add', function(req, res) {
             if (residentList[i].isPresent == false) {
 
                 residentList[i].toggleIsPresent();
+                jsonContent['residents'][i].isPresent = true;
                 residentList[i].timeStamp = currentTimeString;
+                jsonContent['residents'][i].timeStamp = currentTimeString;
                 residentList[i].reasonNotPresent = null;
+                jsonContent['residents'][i].reasonNotPresent = newReason;
+
+                jsonfile.writeFileSync(myWriteFileValuePath, jsonContent)
                 res.redirect('/');
                 return;
             } else {
@@ -205,11 +210,15 @@ app.post('/add', function(req, res) {
                     return;
                 } else {
                     residentList[i].toggleIsPresent();
+                    jsonContent['residents'][i].isPresent = false;
                     residentList[i].timeStamp = currentTimeString;
+                    jsonContent['residents'][i].timeStamp = currentTimeString;
                     residentList[i].reasonNotPresent = newReason;
+                    jsonContent['residents'][i].reasonNotPresent = newReason;
 
 
                     //writeNewResidentObjectToDatabase(residentList[i])
+                    jsonfile.writeFileSync(myWriteFileValuePath, jsonContent)
 
 
 
@@ -384,11 +393,12 @@ function timeNow() {
     var d = new Date(),
         h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
         m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
-    h = h - 5;
+    h = h % 12;
+    h = h-5;
     if (h <= 12) {
-        return h + ':' + m + " a.m.";
+        return h + ':' + m;
     } else {
-        return h + ':' + m + " a.m.";
+        return h + ':' + m;
     }
 
 } // end get time now function def
