@@ -16,15 +16,11 @@ var bodyParser = require('body-parser');
 var jsonfile = require('jsonfile')
 var util = require('util')
 var fs = require('fs')
+var httpProxy = require('http-proxy');
 
 
 
 
-
-
-
-// local vars
-const PORT = 8000;
 var app = express();
 
 
@@ -44,17 +40,6 @@ var residentList = getDatabaseResidents(jsonContent);
 
 var myWriteFileValuePath = './models/activeDatabase.json'
 
-// list of reasons for not being home
-var currentReasonsList = [
-    "Food",
-    "Church",
-    "Court",
-    "Work",
-    "Family",
-    "Holiday"
-];
-
-
 
 
 
@@ -72,6 +57,24 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 
+
+app.set('port', process.env.PORT || 9000);
+
+
+
+
+
+//
+// Create your proxy server and set the target in the options.
+//
+httpProxy.createProxyServer({target:'http://localhost:9000'}).listen(8000);
+
+
+
+http.createServer(app).listen(app.get('port'),
+  function(){
+    console.log("Express server listening on port " + app.get('port'));
+});
 
 
 
@@ -116,8 +119,7 @@ app.get('/', function(req, res) {
         title: jsonContent.databaseName,
         presentResidentsList: getAllPresentPersonObjects(residentList),
         notPresentResidentsList: getAllNotPresentPersonObjects(residentList),
-        items: currentItemsList,
-        reasons: currentReasonsList
+        items: currentItemsList
     });
     console.log('\nPage was refreshed..')
     console.log('\nCurrent Residents at Home: ', currentItemsList)
@@ -270,12 +272,12 @@ function writeNewResidentObjectToDatabase(new_resident){
 
 
 
-// tell the server to begin listening
+/*// tell the server to begin listening
 app.listen(PORT, function() {
     // tell our server to start listening
     console.log('ready on port ' + PORT)
 });
-
+*/
 
 
 
@@ -390,16 +392,20 @@ function stripUserInputString(str, delimiter) {
 
 
 function timeNow() {
-    var d = new Date(),
-        h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
-        m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
-    h = h % 12;
-    h = h-5;
-    if (h <= 12) {
-        return h + ':' + m;
+    var d = new Date();
+
+    if (d.getHours() - 5 < 0) {
+        var a = d.getHours() + 7;
     } else {
-        return h + ':' + m;
+        var a = d.getHours() -5;
     }
+
+    h = (d.getHours() < 10 ? '0' : '') + (a);
+
+    m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+
+    return h + ':' + m;
+
 
 } // end get time now function def
 

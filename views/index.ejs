@@ -197,6 +197,7 @@
         var x = document.forms["newResidentForm"]["newPinNumber"].value;
         var y = document.forms["newResidentForm"]["newFirstName"].value;
         var z = document.forms["newResidentForm"]["newLastName"].value;
+        var a = document.forms["newResidentForm"]["staffPassphrase"].value;
         if (x == null || x == "") {
             alert("Pin Number must be filled out");
             return false;
@@ -209,7 +210,29 @@
             alert("Last Name must be filled out");
             return false;
         }
+
+        if (a == null || a == "") {
+            alert("Enter the Staff member passphrase");
+            return false;
+        }
+
+
+        if (x != null && y != null && z != null) {
+            var conf_x = prompt("Confirm your new pin number!")
+            if (conf_x != x) {
+                return false;
+            };
+
+        };
+
+
+
     }
+
+
+
+
+
 
 
     </script>
