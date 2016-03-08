@@ -48,20 +48,20 @@
             <form id="newResidentForm" action="/new" method="post" onsubmit="return validateForm()">
               <fieldset class="form-group">
                 <label for="formGroupExampleInput">Pin Number</label>
-                <input name="newPinNumber" type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Pin Here" autocomplete="off" autocomplete="off">
+                <input name="newPinNumber" type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Pin Here" autocomplete="off">
               </fieldset>
               <fieldset class="form-group">
                 <label for="formGroupExampleInput2">First Name</label>
-                <input name="newFirstName" type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter First Name Here" autocomplete="off" autocomplete="off">
+                <input name="newFirstName" type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter First Name Here" autocomplete="off">
               </fieldset>
               <fieldset class="form-group">
                 <label for="formGroupExampleInput3">Last Name</label>
-                <input name="newLastName" type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter Last Name Here" autocomplete="off" autocomplete="off">
+                <input name="newLastName" type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter Last Name Here" autocomplete="off">
               </fieldset>
 
               <fieldset class="form-group">
                 <label for="formGroupExampleInput4">Staff Passphrase</label>
-                <input name="staffPassphrase" type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter the secret passphrase" autocomplete="off" autocomplete="off">
+                <input name="staffPassphrase" type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter the secret passphrase" autocomplete="off">
               </fieldset>
 
               <input class="btn btn-default" type="submit" value="Submit">
@@ -97,7 +97,7 @@
             <h1 class="lead"><%= presentTableTitle %></h1>
         </div>
         <div class="container residents-in-table-box">
-            <table class="table table-bordered table-condensed table-hover">
+            <table id="tablePresentID" class="table table-bordered table-condensed table-hover">
                 <thead>
                     <tr>
                         <th scope="row">#</th>
@@ -129,7 +129,7 @@
             <h1 class="lead"><%= notPresentTableTitle %></h1>
         </div>
         <div class="container residents-out-table-box">
-            <table class="table table-hover">
+            <table id="tableNotPresentID" class="table table-hover">
                 <thead>
                     <tr>
                         <th scope="row">#</th>
@@ -153,6 +153,150 @@
             </table>
         </div>
     </div>
+
+
+
+
+
+
+
+
+<!-- <a data-toggle="modal" href="#myTableModal" class="btn btn-primary btn-lg">Launch demo modal</a> -->
+
+<div class="modal fade" id="myTableModal">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 id="firstNameModalLabel" class="modal-title">Modal title</h4>
+    </div>
+    <div class="modal-body">
+      <table class="table table-bordered table-condensed table-hover">
+          <thead>
+          </thead>
+          <tbody class="table">
+              <tr>
+                  <td>In/Out</td>
+                  <td>Date</td>
+                  <td>Time</td>
+                  <td>Note</td>
+              </tr>
+              <tr>
+                  <td>a</td>
+                  <td>table</td>
+                  <td>table</td>
+                  <td>table</td>
+              </tr>
+          </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    </div>
+  </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+
+
+<script>
+var table = document.getElementById("tableNotPresentID");
+if (table != null) {
+    for (var i = 0; i < table.rows.length; i++) {
+        for (var j = 0; j < table.rows[i].cells.length - 1; j++)
+        table.rows[i].cells[j].onclick = function () {
+            tableNotPresentText(this);
+        };
+    }
+}
+
+var table = document.getElementById("tablePresentID");
+if (table != null) {
+    for (var i = 0; i < table.rows.length; i++) {
+        for (var j = 0; j < table.rows[i].cells.length - 1; j++)
+        table.rows[i].cells[j].onclick = function () {
+            tablePresentText(this);
+        };
+    }
+}
+
+
+function tableNotPresentText(tableCell) {
+    //alert(tableCell.innerHTML);
+    var cellString = tableCell.innerHTML;
+    var myModalTitle = document.getElementById('firstNameModalLabel')
+
+    <% for (var i = notPresentResidentsList.length - 1; i >= 0; i--) { %>
+
+        // match first names
+        if (cellString == "<%= notPresentResidentsList[i].firstName %>") {
+            var fullName = "<%= notPresentResidentsList[i].getFullName() %>"
+            myModalTitle.innerHTML = fullName
+           console.log(fullName)
+           $('#myTableModal').modal('show')
+        };
+
+        // match lastNames
+        if (cellString == "<%= notPresentResidentsList[i].lastName %>") {
+            var fullName = "<%= notPresentResidentsList[i].getFullName() %>"
+            myModalTitle.innerHTML = fullName
+           console.log(fullName)
+           $('#myTableModal').modal('show')
+        };
+
+
+
+    <%};%>
+
+
+
+
+
+}
+
+
+
+    function tablePresentText(tableCell) {
+    //alert(tableCell.innerHTML);
+    var cellString = tableCell.innerHTML;
+    var myModalTitle = document.getElementById('firstNameModalLabel')
+
+    <% for (var i = notPresentResidentsList.length - 1; i >= 0; i--) { %>
+
+        // match first names
+        if (cellString == "<%= presentResidentsList[i].firstName %>") {
+            var fullName = "<%= presentResidentsList[i].getFullName() %>"
+            myModalTitle.innerHTML = fullName
+           console.log(fullName)
+           $('#myTableModal').modal('show')
+        };
+
+        // match lastNames
+        if (cellString == "<%= presentResidentsList[i].lastName %>") {
+            var fullName = "<%= presentResidentsList[i].getFullName() %>"
+            myModalTitle.innerHTML = fullName
+           console.log(fullName)
+           $('#myTableModal').modal('show')
+        };
+
+
+
+    <%};%>
+
+}
+
+
+
+
+</script>
+
+
+
     <!-- Trigger the modal with a button -->
     <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#mySignInSignOutModal">Open Modal</button> -->
     <!-- Modal -->

@@ -154,6 +154,13 @@ app.post('/new', function(req,res){
 
 
 
+ Date.prototype.yyyymmdd = function() {
+   var yyyy = this.getFullYear().toString();
+   var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+   var dd  = this.getDate().toString();
+   return yyyy + (mm[1]?mm:"0"+mm[0]) + (dd[1]?dd:"0"+dd[0]); // padding
+  };
+
 
 
 
@@ -184,15 +191,24 @@ app.post('/add', function(req, res) {
             if (app.residentList[i].isPresent == false) {
 
                 app.residentList[i].toggleIsPresent();
-                app.jsonContent['residents'][i].isPresent = true;
+                app.jsonContent['residents'][i].isPresent =  app.residentList[i].getIsPresent();
+
                 app.residentList[i].timeStamp = currentTimeString;
                 app.jsonContent['residents'][i].timeStamp = currentTimeString;
-                app.residentList[i].reasonNotPresent = null;
+
+                app.residentList[i].reasonNotPresent = newReason;
                 app.jsonContent['residents'][i].reasonNotPresent = newReason;
+
+				dString = new Date();
+                var log_item = ["In",dString.yyyymmdd(),currentTimeString,newReason]
+                app.jsonContent['residents'][i].log.push(log_item)
+                app.residentList[i].log = app.jsonContent['residents'][i].log;
+
 
                 jsonfile.writeFileSync(myWriteFileValuePath, app.jsonContent)
                 res.redirect('/');
                 return;
+
             } else {
                 // user is signing OUT
 
@@ -201,12 +217,21 @@ app.post('/add', function(req, res) {
                     res.redirect('/');
                     return;
                 } else {
+
                     app.residentList[i].toggleIsPresent();
-                    app.jsonContent['residents'][i].isPresent = false;
+                    app.jsonContent['residents'][i].isPresent =  app.residentList[i].getIsPresent();
+
                     app.residentList[i].timeStamp = currentTimeString;
                     app.jsonContent['residents'][i].timeStamp = currentTimeString;
+
                     app.residentList[i].reasonNotPresent = newReason;
                     app.jsonContent['residents'][i].reasonNotPresent = newReason;
+
+
+                    dString = new Date();
+                    var log_item = ["Out",dString.yyyymmdd(),currentTimeString,newReason]
+                    app.jsonContent['residents'][i].log.push(log_item)
+                    app.residentList[i].log = app.jsonContent['residents'][i].log;
 
 
                     //writeNewResidentObjectToDatabase(app.residentList[i])
@@ -285,7 +310,8 @@ function getDatabaseResidents(content) {
             item.lastName,
             item.isPresent,
             item.reasonNotPresent,
-            this.timeStamp
+            item.timeStamp,
+            item.log
         ));
         console.log(item)
     })
@@ -386,6 +412,7 @@ function Resident(id_num, f_name, l_name, present_bool, reason) {
     } else {
         this.reasonNotPresent = null;
     }
+    this.log = [];
 
 } // end overload def
 
@@ -433,7 +460,7 @@ Resident.prototype.setIsPresent = function(bool_val) {
 
 Resident.prototype.getIsPresent = function() {
     if (this.isPresent == true) {
-        alert("Present")
+        //alert("Present")
         return true;
     }
     return false;
