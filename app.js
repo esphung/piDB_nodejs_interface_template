@@ -26,17 +26,6 @@ var app = express();
 
 
 
-// for resident being signed in and out to be stored
-//var selectedResident = new Resident();
-
-// read database json file
-var databaseFilecontents = fs.readFileSync("./models/activeDatabase.json");
-
-// parse the json data
-var jsonContent = JSON.parse(databaseFilecontents);
-
-// create list of residents found in file
-var residentList = getDatabaseResidents(jsonContent);
 
 var myWriteFileValuePath = './models/activeDatabase.json'
 
@@ -55,29 +44,16 @@ var myWriteFileValuePath = './models/activeDatabase.json'
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-
-
-
 app.set('port', process.env.PORT || 9000);
 
 
 
-
-
-//
-// Create your proxy server and set the target in the options.
-//
-httpProxy.createProxyServer({target:'http://localhost:9000'}).listen(8000);
-
-
-
-http.createServer(app).listen(app.get('port'),
-  function(){
-    console.log("Express server listening on port " + app.get('port'));
-});
-
-
-
+// read database json file
+app.databaseFilecontents = fs.readFileSync("./models/activeDatabase.json");
+// parse the json data
+app.jsonContent = JSON.parse(app.databaseFilecontents);
+// create list of residents found in file
+app.residentList = getDatabaseResidents(app.jsonContent);
 
 
 
@@ -93,8 +69,25 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(path.join(__dirname, 'bower_components')));
 
 
+/*// tell the server to begin listening
+app.listen(PORT, function() {
+    // tell our server to start listening
+    console.log('ready on port ' + PORT)
+});
+*/
 
 
+
+
+//
+// Create your proxy server and set the target in the options.
+//
+httpProxy.createProxyServer({target:'http://localhost:9000'}).listen(8000);
+
+http.createServer(app).listen(app.get('port'),
+  function(){
+    console.log("Express server listening on port " + app.get('port'));
+});
 
 
 
@@ -106,7 +99,7 @@ app.use(express.static(path.join(__dirname, 'bower_components')));
 // when client get requests the root page
 app.get('/', function(req, res) {
 
-    var currentItemsList = getAllPresentPersonObjects(residentList)
+    var currentItemsList = getAllPresentPersonObjects(app.residentList)
     currentItemsList = getAllFullNamesFromObjectList(currentItemsList);
 
 
@@ -116,9 +109,9 @@ app.get('/', function(req, res) {
 
         presentTableTitle: "Currently Home",
         notPresentTableTitle: "Currently Signed Out",
-        title: jsonContent.databaseName,
-        presentResidentsList: getAllPresentPersonObjects(residentList),
-        notPresentResidentsList: getAllNotPresentPersonObjects(residentList),
+        title: app.jsonContent.databaseName,
+        presentResidentsList: getAllPresentPersonObjects(app.residentList),
+        notPresentResidentsList: getAllNotPresentPersonObjects(app.residentList),
         items: currentItemsList
     });
     console.log('\nPage was refreshed..')
@@ -147,10 +140,10 @@ app.post('/new', function(req,res){
           "timeStamp": null,
           "reasonNotPresent": null
         }
-    jsonContent['residents'].push(item)
-    jsonfile.writeFileSync("./models/activeDatabase.json", jsonContent)
-    residentList = getDatabaseResidents(jsonContent);
-    console.log(residentList)
+    app.jsonContent['residents'].push(item)
+    jsonfile.writeFileSync("./models/activeDatabase.json", app.jsonContent)
+    app.residentList = getDatabaseResidents(app.jsonContent);
+    console.log(app.residentList)
 
 
     };
@@ -169,9 +162,6 @@ app.post('/new', function(req,res){
 app.post('/add', function(req, res) {
 
 
-
-
-
     var newItem = req.body.newItem; // this is an input's name attribute
     var newReason = req.body.newReason;
     console.log(newReason)
@@ -186,21 +176,21 @@ app.post('/add', function(req, res) {
 
 
 
-    for (var i = residentList.length - 1; i >= 0; i--) {
-        if (newItem == residentList[i].id_num) {
+    for (var i = app.residentList.length - 1; i >= 0; i--) {
+        if (newItem == app.residentList[i].id_num) {
 
 
             // check if user is signing IN
-            if (residentList[i].isPresent == false) {
+            if (app.residentList[i].isPresent == false) {
 
-                residentList[i].toggleIsPresent();
-                jsonContent['residents'][i].isPresent = true;
-                residentList[i].timeStamp = currentTimeString;
-                jsonContent['residents'][i].timeStamp = currentTimeString;
-                residentList[i].reasonNotPresent = null;
-                jsonContent['residents'][i].reasonNotPresent = newReason;
+                app.residentList[i].toggleIsPresent();
+                app.jsonContent['residents'][i].isPresent = true;
+                app.residentList[i].timeStamp = currentTimeString;
+                app.jsonContent['residents'][i].timeStamp = currentTimeString;
+                app.residentList[i].reasonNotPresent = null;
+                app.jsonContent['residents'][i].reasonNotPresent = newReason;
 
-                jsonfile.writeFileSync(myWriteFileValuePath, jsonContent)
+                jsonfile.writeFileSync(myWriteFileValuePath, app.jsonContent)
                 res.redirect('/');
                 return;
             } else {
@@ -211,16 +201,16 @@ app.post('/add', function(req, res) {
                     res.redirect('/');
                     return;
                 } else {
-                    residentList[i].toggleIsPresent();
-                    jsonContent['residents'][i].isPresent = false;
-                    residentList[i].timeStamp = currentTimeString;
-                    jsonContent['residents'][i].timeStamp = currentTimeString;
-                    residentList[i].reasonNotPresent = newReason;
-                    jsonContent['residents'][i].reasonNotPresent = newReason;
+                    app.residentList[i].toggleIsPresent();
+                    app.jsonContent['residents'][i].isPresent = false;
+                    app.residentList[i].timeStamp = currentTimeString;
+                    app.jsonContent['residents'][i].timeStamp = currentTimeString;
+                    app.residentList[i].reasonNotPresent = newReason;
+                    app.jsonContent['residents'][i].reasonNotPresent = newReason;
 
 
-                    //writeNewResidentObjectToDatabase(residentList[i])
-                    jsonfile.writeFileSync(myWriteFileValuePath, jsonContent)
+                    //writeNewResidentObjectToDatabase(app.residentList[i])
+                    jsonfile.writeFileSync(myWriteFileValuePath, app.jsonContent)
 
 
 
@@ -249,35 +239,6 @@ app.post('/add', function(req, res) {
 
 
 
-function writeNewResidentObjectToDatabase(new_resident){
-    // WRITE:
-    var myWriteFileValuePath = './models/activeDatabase.json'
-    //var jsonStr = '{"theTeam":[{"teamId":"1","status":"pending"},{"teamId":"2","status":"member"},{"teamId":"3","status":"member"}]}';
-
-    //var obj = JSON.parse(jsonStr);
-    //obj['theTeam'].push({"teamId":"4","status":"pending"});
-    jsonContent['residents'].push(new_resident)
-    //var jsonStr = JSON.stringify(jsonContent);
-    //console.log(jsonStr)
-
-    jsonfile.writeFileSync(myWriteFileValuePath, jsonContent)
-    //fd.writeFileSync(jsonStr)
-    // "{"theTeam":[{"teamId":"1","status":"pending"},{"teamId":"2","status":"member"},{"teamId":"3","status":"member"},{"teamId":"4","status":"pending"}]}"
-
-}
-
-
-
-
-
-
-
-/*// tell the server to begin listening
-app.listen(PORT, function() {
-    // tell our server to start listening
-    console.log('ready on port ' + PORT)
-});
-*/
 
 
 
@@ -296,9 +257,15 @@ app.listen(PORT, function() {
 
 
 
-// VIEW CONTROLLER FUNCTIONS USING JSON ==============================
 
 
+
+
+
+
+
+
+// VIEW CONTROLLER FUNCTIONS ==============================
 
 
 
@@ -311,14 +278,16 @@ function getDatabaseResidents(content) {
 
     // construct db resident objects from json
     content.residents.forEach(function(item) {
+    	//id_num,f_name,l_name,present_bool,reason
         list.push(new Resident(
             item.id_num,
             item.firstName,
             item.lastName,
             item.isPresent,
-            this.timeStamp,
-            item.reasonNotPresent
+            item.reasonNotPresent,
+            this.timeStamp
         ));
+        console.log(item)
     })
 
     console.log("\n * Finished Database * \n");
@@ -326,8 +295,6 @@ function getDatabaseResidents(content) {
     return list;
 
 } // end set up db resident objects function def
-
-
 
 
 
@@ -372,13 +339,6 @@ function getAllNotPresentPersonObjects(argument) {
 
 
 function stripUserInputString(str, delimiter) {
-    // delimiter is what to escape
-    //  discuss at: http://phpjs.org/functions/preg_quote/
-    // original by: booeyOH
-    // improved by: Ates Goral (http://magnetiq.com)
-    // improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // improved by: Brett Zamir (http://brett-zamir.me)
-    // bugfixed by: Onno Marsman
     //   example 1: preg_quote("$40");
     //   returns 1: '\\$40'
     //   example 2: preg_quote("*RRRING* Hello?");
@@ -412,15 +372,6 @@ function timeNow() {
 
 
 
-/*// constructor null
-function Resident() {
-    this.id_num = null;
-    this.firstName = null;
-    this.lastName = null;
-    this.isPresent = true;
-    this.timeStamp = null;
-    this.reasonNotPresent = null;
-} // end null*/
 
 
 // constructer overloaded
@@ -435,6 +386,7 @@ function Resident(id_num, f_name, l_name, present_bool, reason) {
     } else {
         this.reasonNotPresent = null;
     }
+
 } // end overload def
 
 
