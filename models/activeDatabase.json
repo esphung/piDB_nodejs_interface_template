@@ -1,1 +1,32 @@
-{"databaseName":"Resident Sign Out Sheet","residents":[{"id_num":"0000","firstName":"Rich","lastName":"Brown","isPresent":false,"timeStamp":"01:19","reasonNotPresent":"Smoke Break","log":[["In","20160308","01:17",""],["Out","20160308","01:19","Smoke Break"]]},{"id_num":"0001","firstName":"Eric","lastName":"Phung","isPresent":true,"timeStamp":"01:19","reasonNotPresent":"","log":[["In","20160308","01:19",""]]},{"id_num":"0002","firstName":"Cheryl","lastName":"Hunt","isPresent":false,"timeStamp":"01:20","reasonNotPresent":"Going to the Store","log":[["Out","20160308","01:20","Going to the Store"]]},{"id_num":"0007","firstName":"James","lastName":"Bond","isPresent":true,"timeStamp":"09:08","reasonNotPresent":"","log":["Hey","World"]},{"id_num":"1111","firstName":"Sponge","lastName":"Bob","isPresent":true,"timeStamp":null,"reasonNotPresent":null,"log":[]},{"id_num":"2222","firstName":"Patrick","lastName":"Star","isPresent":true,"timeStamp":null,"reasonNotPresent":null,"log":[]},{"id_num":"7777","firstName":"Greatest","lastName":"Ever","isPresent":true,"timeStamp":null,"reasonNotPresent":null,"log":[]},{"id_num":"0123","firstName":"Aubrey","lastName":"Graham","isPresent":false,"timeStamp":"011:45","reasonNotPresent":"sdlfkkfdsj","log":[]},{"id_num":"4321","firstName":"What","lastName":"TF","isPresent":true,"timeStamp":null,"reasonNotPresent":null,"log":[]},{"id_num":"1122","firstName":"Poke","lastName":"Mon","isPresent":true,"timeStamp":null,"reasonNotPresent":null,"log":[]}]}
+{
+  "databaseName": "Resident Sign Out Sheet",
+  "residents": [
+    {
+      "id_num": "0000",
+      "firstName": "Rich",
+      "lastName": "Brown",
+      "isPresent": true,
+      "timeStamp": "",
+      "reason": "",
+      "userActivityLog": []
+    },
+    {
+      "id_num": "0001",
+      "firstName": "Eric",
+      "lastName": "Phung",
+      "isPresent": true,
+      "timeStamp": "",
+      "reason": "",
+      "userActivityLog": []
+    },
+    {
+      "id_num": "0002",
+      "firstName": "Cheryl",
+      "lastName": "Hunt",
+      "isPresent": true,
+      "timeStamp": "",
+      "reason": "",
+      "userActivityLog": []
+    }
+  ]
+}

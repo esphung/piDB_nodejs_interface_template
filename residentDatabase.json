@@ -6,27 +6,27 @@
       "firstName": "Rich",
       "lastName": "Brown",
       "isPresent": true,
-      "timeStamp": null,
-      "reasonNotPresent": null,
-      "userActivityData":[]
+      "timeStamp": "",
+      "reason": "",
+      "userActivityLog": []
     },
     {
       "id_num": "0001",
       "firstName": "Eric",
       "lastName": "Phung",
       "isPresent": true,
-      "timeStamp": null,
-      "reasonNotPresent": null,
-      "userActivityData":[]
+      "timeStamp": "",
+      "reason": "",
+      "userActivityLog": []
     },
     {
       "id_num": "0002",
       "firstName": "Cheryl",
       "lastName": "Hunt",
       "isPresent": true,
-      "timeStamp": null,
-      "reasonNotPresent": null,
-      "userActivityData": []
+      "timeStamp": "",
+      "reason": "",
+      "userActivityLog": []
     }
   ]
 }
