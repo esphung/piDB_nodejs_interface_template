@@ -136,7 +136,7 @@ app.post('/new', function(req,res){
     var staffPassphrase = req.body.staffPassphrase;
 
     // CREATE NEW RESIDENT
-    if (staffPassphrase == 'a') {
+    if (staffPassphrase == 'phung') {
         var newPinNumber = req.body.newPinNumber;
         var newFirstName = req.body.newFirstName;
         var newLastName = req.body.newLastName;
@@ -201,62 +201,6 @@ function getResidentByFirstName(str) {
 
 
 
-function signResidentInOut(numStr,reason) {
-    var currentDateString = new Date();
-    currentDateString.yyyymmdd()
-    var currentTimeString = timeNow();
-
-    // find the json record in db
-    //residentObject = getResidentByIdNum(residentObject.id_num)
-
-
-    for (var i = app.jsonContent['residents'].length - 1; i >= 0; i--) {
-        if (app.jsonContent['residents'][i].id_num == numStr) {
-            // resient record found
-
-    if (app.jsonContent['resident'][i].isPresent == true) {
-        // signing out
-        var activityItem = [
-            "Sign Out",
-            currentDateString.yyyymmdd(),
-            currentTimeString,
-            reason
-        ]
-        app.jsonContent['resident'][i].isPresent = false;
-    } else {
-        // signing in
-        app.jsonContent['resident'][i].isPresent = true;
-        var activityItem = [
-            "Sign In",
-            currentDateString.yyyymmdd(),
-            currentTimeString,
-            reason
-        ]
-
-    }
-    app.jsonContent['resident'][i].timeStamp = timeNow();
-    app.jsonContent['resident'][i].reason = reason;
-    //residentObject.userActivityLog
-    // save the resident to json file here
-    jsonfile.writeFileSync(app.databaseFilePath, app.jsonContent)
-
-
-
-        } else {
-            return false
-        }// end if/else
-    }; // end for loop
-
-
-
-
-
-    return true
-
-}// end sign resident in / out
-
-
-
 
 
 
@@ -270,7 +214,6 @@ app.post('/add', function(req, res) {
     var newReason = req.body.newReason;
     //console.log(newReason)
 
-    //signResidentInOut('0000',newReason)
 
 
 
@@ -310,8 +253,8 @@ app.post('/add', function(req, res) {
 
 */
                 //jsonfile.writeFileSync(app.databaseFilePath, app.jsonContent)
-                res.redirect('/');
-                return
+                //res.redirect('/');
+                //return
 
             } else {
                 // user is signing OUT
@@ -356,16 +299,16 @@ app.post('/add', function(req, res) {
 
 
 
-                    jsonfile.writeFileSync(app.databaseFilePath, app.jsonContent)
 
 
 
-                    res.redirect('/');
-                    return;
+
+                    //res.redirect('/');
                 }
 
 
             }
+            jsonfile.writeFileSync(app.databaseFilePath, app.jsonContent)
 
 
 
@@ -553,11 +496,7 @@ function Resident(id_num, f_name, l_name, present_bool, reason) {
     this.lastName = l_name;
     this.isPresent = present_bool;
     this.timeStamp = "";
-    if (reason != "") {
-        this.reason = reason;
-    } else {
-        this.reason = "";
-    }
+    this.reason = reason,
     this.userActivityLog = [];
 
 } // end overload def

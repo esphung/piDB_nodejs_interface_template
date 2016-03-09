@@ -146,7 +146,7 @@
                         <td><%= notPresentResidentsList[i].firstName %></td>
                         <td><%= notPresentResidentsList[i].lastName %></td>
                         <td><%= notPresentResidentsList[i].timeStamp %></td>
-                        <td><%= notPresentResidentsList[i].reasonNotPresent %></td>
+                        <td><%= notPresentResidentsList[i].reason %></td>
                     </tr>
                     <% } %>
                 </tbody>
@@ -200,95 +200,6 @@
 
 
 
-
-
-<!--
-
-<script>
-var table = document.getElementById("tableNotPresentID");
-if (table != null) {
-    for (var i = 0; i < table.rows.length; i++) {
-        for (var j = 0; j < table.rows[i].cells.length - 1; j++)
-        table.rows[i].cells[j].onclick = function () {
-            tableNotPresentText(this);
-        };
-    }
-}
-
-var table = document.getElementById("tablePresentID");
-if (table != null) {
-    for (var i = 0; i < table.rows.length; i++) {
-        for (var j = 0; j < table.rows[i].cells.length - 1; j++)
-        table.rows[i].cells[j].onclick = function () {
-            tablePresentText(this);
-        };
-    }
-}
-
-
-function tableNotPresentText(tableCell) {
-    //alert(tableCell.innerHTML);
-    var cellString = tableCell.innerHTML;
-    var myModalTitle = document.getElementById('firstNameModalLabel')
-
-    <% for (var i = notPresentResidentsList.length - 1; i >= 0; i--) { %>
-
-        // match first names
-        if (cellString == "<%= notPresentResidentsList[i].firstName %>") {
-            var fullName = "<%= notPresentResidentsList[i].firstName + " " + notPresentResidentsList[i].lastName %>"
-            myModalTitle.innerHTML = fullName
-           console.log(fullName)
-           $('#myTableModal').modal('show')
-        };
-
-        // match lastNames
-        if (cellString == "<%= notPresentResidentsList[i].lastName %>") {
-            var fullName = "<%= notPresentResidentsList[i].firstName + " " + notPresentResidentsList[i].lastName %>"
-            myModalTitle.innerHTML = fullName
-           console.log(fullName)
-           $('#myTableModal').modal('show')
-        };
-
-
-
-    <%};%>
-
-
-}
-
-
-
-    function tablePresentText(tableCell) {
-    //alert(tableCell.innerHTML);
-    var cellString = tableCell.innerHTML;
-    var myModalTitle = document.getElementById('firstNameModalLabel')
-
-    <% for (var i = notPresentResidentsList.length - 1; i >= 0; i--) { %>
-
-        // match first names
-        if (cellString == "<%= presentResidentsList[i].firstName %>") {
-            var fullName = "<%= presentResidentsList[i].firstName + " " + presentResidentsList[i].lastName %>"
-            myModalTitle.innerHTML = fullName
-           console.log(fullName)
-           $('#myTableModal').modal('show')
-        };
-
-        // match lastNames
-        if (cellString == "<%= presentResidentsList[i].lastName %>") {
-            var fullName = "<%= presentResidentsList[i].firstName + " " + presentResidentsList[i].lastName %>"
-            myModalTitle.innerHTML = fullName
-           console.log(fullName)
-           $('#myTableModal').modal('show')
-        };
-
-
-
-    <%};%>
-
-}
-
-</script>
- -->
 
     <!-- Modal SIGN IN / SIGN OUT ========================================== -->
     <!-- Trigger the modal with a button -->
